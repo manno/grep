@@ -321,6 +321,11 @@ if !exists("Agrep_Path")
     let Agrep_Path = 'agrep'
 endif
 
+" Location of the git utility
+if !exists("Ggrep_Path")
+    let Ggrep_Path = 'git'
+endif
+
 " Location of the find utility
 if !exists("Grep_Find_Path")
     let Grep_Find_Path = 'find'
@@ -745,6 +750,54 @@ function! s:RunGrepSpecial(cmd_name, which, action, ...)
     call s:RunGrepCmd(cmd, pattern, a:action)
 endfunction
 
+" RunGitGrep()
+" Run the specified grep command
+function! s:RunGitGrep(cmd_name, grep_cmd, action, ...)
+    if a:0 > 0 && (a:1 == "-?" || a:1 == "-h")
+        echo 'Usage: ' . a:cmd_name . " [<grep_options>] [<search_pattern> " .
+                        \ "[<file_name(s)>]]"
+        return
+    endif
+
+    let grep_opt  = ""
+    let pattern   = ""
+    let filenames = ""
+
+    " Parse the arguments
+    " grep command-line flags are specified using the "-flag" format
+    " the next argument is assumed to be the pattern
+    " and the next arguments are assumed to be filenames or file patterns
+    let argcnt = 1
+    while argcnt <= a:0
+        if a:{argcnt} =~ '^-'
+            let grep_opt = grep_opt . " " . a:{argcnt}
+        elseif pattern == ""
+            let pattern = g:Grep_Shell_Quote_Char . a:{argcnt} .
+                            \ g:Grep_Shell_Quote_Char
+        else
+            let filenames= filenames . " " . a:{argcnt}
+        endif
+        let argcnt = argcnt + 1
+    endwhile
+
+    if grep_opt == ""
+        let grep_opt = g:Grep_Default_Options
+    endif
+
+    if a:grep_cmd == 'git grep'
+        let grep_path = g:Ggrep_Path
+        let grep_expr_option = ''
+    else
+        return
+    endif
+
+    let cmd = grep_path . " grep " . grep_opt . " -n "
+    let cmd = cmd . grep_expr_option . " " . pattern
+    let cmd = cmd . " " . filenames
+
+    call s:RunGrepCmd(cmd, pattern, a:action)
+endfunction
+
 " RunGrep()
 " Run the specified grep command
 function! s:RunGrep(cmd_name, grep_cmd, action, ...)
@@ -840,6 +893,8 @@ command! -nargs=* -complete=file Grep
             \ call s:RunGrep('Grep', 'grep', 'set', <f-args>)
 command! -nargs=* -complete=file Rgrep
             \ call s:RunGrepRecursive('Rgrep', 'grep', 'set', <f-args>)
+command! -nargs=* -complete=file Ggrep
+            \ call s:RunGitGrep('Ggrep', 'git grep', 'set', <f-args>)
 command! -nargs=* GrepBuffer
             \ call s:RunGrepSpecial('GrepBuffer', 'buffer', 'set', <f-args>)
 command! -nargs=* Bgrep
