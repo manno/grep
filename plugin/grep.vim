@@ -571,6 +571,11 @@ function! s:RunGrepRecursive(cmd_name, grep_cmd, action, ...)
         echo "\r"
     endif
 
+    if g:Grep_Default_Options == ""
+        let grep_opt = input("Grep Default Options: ", grep_opt . " -w")
+        echo "\r"
+    endif
+
     let txt = filepattern . ' '
     let find_file_pattern = ''
     while txt != ''
