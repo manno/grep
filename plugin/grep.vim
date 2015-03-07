@@ -1,7 +1,7 @@
 " File: grep.vim
 " Author: Yegappan Lakshmanan (yegappan AT yahoo DOT com)
-" Version: 1.11
-" Last Modified: April 24, 2013
+" Version: 1.11b
+" Last Modified: March 6, 2015
 " 
 " Overview
 " --------
