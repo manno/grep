@@ -1,7 +1,7 @@
 " File: grep.vim
 " Author: Yegappan Lakshmanan (yegappan AT yahoo DOT com)
 " Version: 1.11b
-" Last Modified: March 6, 2015
+" Last Modified: March 25, 2015
 " 
 " Overview
 " --------
@@ -69,6 +69,7 @@
 " :Ragrep        - Run recursive agrep
 " :RagrepAdd     - Same as ":Ragrep" but adds the results to the current
 "                  results
+" :SetGrepOpt       - Set grep default options, default is '-s -w'
 "
 " The above commands can be invoked like this:
 "
@@ -405,6 +406,11 @@ if !exists("Grep_Skip_Files")
     let Grep_Skip_Files = '*~ *,v s.*'
 endif
 
+function! s:SetGrepOption()
+    let g:Grep_Default_Options = input("Default grep options: ", g:Grep_Default_Options)
+    echo "\r"
+endfunction
+
 " RunGrepCmd()
 " Run the specified grep command using the supplied pattern
 function! s:RunGrepCmd(cmd, pattern, action)
@@ -568,11 +574,6 @@ function! s:RunGrepRecursive(cmd_name, grep_cmd, action, ...)
         if filepattern == ""
             return
         endif
-        echo "\r"
-    endif
-
-    if g:Grep_Default_Options == ""
-        let grep_opt = input("Grep Default Options: ", grep_opt . " -w")
         echo "\r"
     endif
 
@@ -864,6 +865,8 @@ command! -nargs=* -complete=file Agrep
             \ call s:RunGrep('Agrep', 'agrep', 'set', <f-args>)
 command! -nargs=* -complete=file Ragrep
             \ call s:RunGrepRecursive('Ragrep', 'agrep', 'set', <f-args>)
+command! -nargs=* -complete=file SetGrepOpt
+            \ call s:SetGrepOption()
 
 if v:version >= 700
 command! -nargs=* -complete=file GrepAdd
