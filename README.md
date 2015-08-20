@@ -15,3 +15,6 @@ and find utilities from the following sites:
    http://gnuwin32.sourceforge.net/packages/grep.htm<BR>
    http://gnuwin32.sourceforge.net/packages/findutils.htm
 
+## Changelog
+* 2015-03-25: add function `SetGrepOpt()`
+

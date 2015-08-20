@@ -2,7 +2,6 @@
 " Author: Yegappan Lakshmanan (yegappan AT yahoo DOT com)
 " Version: 1.11b
 " Last Modified: Aug 20, 2015
-" 
 " Overview
 " --------
 " The grep plugin integrates the grep, fgrep, egrep, and agrep tools with
