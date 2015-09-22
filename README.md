@@ -17,4 +17,5 @@ and find utilities from the following sites:
 
 ## Changelog
 * 2015-03-25: add function `SetGrepOpt()`
+* 2015-09-21: add function `VimGrepStr()`
 
